@@ -1,0 +1,52 @@
+# ==============================================================================
+# Virtual Environment Setup & Dependencies Guide (.venv.example)
+# Level 2 Summer Training / Graduation Project: Multimodal Medical RAG Assistant
+# ==============================================================================
+
+# Required Python Version: Python 3.10 to 3.14 (Tested on Python 3.14 on Windows & Python 3.11 Linux)
+
+# ------------------------------------------------------------------------------
+# 1. Create Virtual Environment
+# ------------------------------------------------------------------------------
+# Windows (PowerShell / Command Prompt):
+#   python -m venv .venv
+
+# macOS / Linux (Terminal):
+#   python3 -m venv .venv
+
+# ------------------------------------------------------------------------------
+# 2. Activate Virtual Environment
+# ------------------------------------------------------------------------------
+# Windows (PowerShell):
+#   .\.venv\Scripts\Activate.ps1
+# Windows (Command Prompt):
+#   .\.venv\Scripts\activate.bat
+
+# macOS / Linux (Bash / Zsh):
+#   source .venv/bin/activate
+
+# ------------------------------------------------------------------------------
+# 3. Upgrade Pip & Install Dependencies
+# ------------------------------------------------------------------------------
+# Upgrade package manager:
+#   python -m pip install --upgrade pip
+
+# Install complete workspace dependencies:
+#   pip install -r requirements.txt
+
+# Or install component-specific dependencies:
+#   pip install -r backend/requirements.txt
+#   pip install -r frontend/requirements.txt
+
+# ------------------------------------------------------------------------------
+# 4. Configure Environment Variables
+# ------------------------------------------------------------------------------
+# Copy the example .env file and add your Gemini API Key:
+#   Windows:
+#     copy .env.example .env
+#   macOS / Linux:
+#     cp .env.example .env
+
+# Edit .env:
+#   GEMINI_API_KEY=your_actual_gemini_api_key_here
+#   API_BASE_URL=http://localhost:8000

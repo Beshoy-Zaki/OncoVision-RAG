@@ -1,0 +1,35 @@
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables & secrets
+.env
+.env.local
+*.env
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Datasets and raw documents (large files)
+Books/
+Papers/
+Training/
+Testing/
+data/raw_docs/
+data/images/
+data/vector_store/
+data/models/ms-marco-MiniLM-L-12-v2/
+
+# Logs and system
+*.log
+.DS_Store
+Thumbs.db
+__MACOSX/
+._*
+*.bak
