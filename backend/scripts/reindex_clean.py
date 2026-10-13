@@ -176,41 +176,41 @@ def merge_blocks_into_chunks(text_blocks: list, chunk_size: int = 800, chunk_ove
             "bbox": [round(v, 1) for v in current_bbox] if current_bbox else None
         }
     
-    for block in text_blocks:
+    for b_idx, block in enumerate(text_blocks):
         block_text = block["text"]
         block_len = len(block_text)
-        
-        # If adding this block would exceed chunk_size and we already have content, flush
+
         if current_char_count > 0 and current_char_count + block_len > chunk_size:
             chunk = finalize_chunk()
             if chunk:
                 chunks.append(chunk)
-            
-            # Overlap: keep the last portion of text for context continuity
-            # Find the last block(s) that fit within the overlap window
+
+            # Overlap using exact slice index b_idx (fixes list.index() duplicate block bug)
             overlap_text_parts = []
             overlap_chars = 0
             overlap_bbox = None
-            for prev_block in reversed(text_blocks[:text_blocks.index(block)]):
+            for prev_block in reversed(text_blocks[:b_idx]):
                 if overlap_chars + len(prev_block["text"]) > chunk_overlap:
                     break
                 overlap_text_parts.insert(0, prev_block["text"])
                 overlap_chars += len(prev_block["text"])
-                if overlap_bbox is None:
-                    overlap_bbox = prev_block["bbox"][:]
-                else:
-                    overlap_bbox = union_bbox(overlap_bbox, prev_block["bbox"])
-            
+                overlap_bbox = (
+                    prev_block["bbox"][:]
+                    if overlap_bbox is None
+                    else union_bbox(overlap_bbox, prev_block["bbox"])
+                )
+
             current_text_parts = overlap_text_parts
             current_char_count = overlap_chars
             current_bbox = overlap_bbox
-        
+
         current_text_parts.append(block_text)
         current_char_count += block_len
-        if current_bbox is None:
-            current_bbox = block["bbox"][:]
-        else:
-            current_bbox = union_bbox(current_bbox, block["bbox"])
+        current_bbox = (
+            block["bbox"][:]
+            if current_bbox is None
+            else union_bbox(current_bbox, block["bbox"])
+        )
     
     # Flush the last chunk
     chunk = finalize_chunk()
@@ -307,8 +307,8 @@ def main():
                     "metadata": meta
                 })
                 
-                # Tokenize for BM25
-                tokenized_corpus.append(tokenize_for_bm25(enriched_text))
+                # Tokenize for BM25 (exclude Document/Page prefixes to avoid skewing IDF)
+                tokenized_corpus.append(tokenize_for_bm25(f"{page_hierarchy} {ch['text']}"))
                 doc_chunk_count += 1
                 
         print(f"  Completed {fname}: {len(doc)} pages -> {doc_chunk_count} clean chunks (filtered {skipped_ref_pages} ref pages)")
